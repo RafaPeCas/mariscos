@@ -6,15 +6,14 @@ Antes de ejecutar este programa, asegúrate de tener instalado Node.js en tu sis
 ## Instalación de Dependencias
 Para instalar las dependencias necesarias, ejecuta el siguiente comando en la terminal:
 
+npm install
 
 Asegúrate de tener instalado `nodemon` de forma global para facilitar el desarrollo. Si no lo tienes instalado, puedes instalarlo con el siguiente comando:
 
-npm install
+npm install -g nodemon
 
 ## Configuración del Archivo de Entorno
 Duplica el archivo `.env.example` y renómbralo como `.env`. Este archivo contendrá las variables de entorno necesarias para configurar el programa. Puedes modificar estas variables según tus necesidades.
-
-npm install -g nodemon
 
 ## Instalación de Dependencias Adicionales
 Este programa utiliza los paquetes `express-flash` y `express-session`. Para instalarlos, ejecuta los siguientes comandos en la terminal:
