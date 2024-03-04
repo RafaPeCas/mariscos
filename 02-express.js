@@ -7,12 +7,14 @@ let mongoose = require('mongoose');
 let bodyParser = require('body-parser'); 
 let path = require('path');
 let app = express();
+const flash = require('express-flash');
+const session = require('express-session');
 app.use(bodyParser.urlencoded({extenden:false}));
 app.use(bodyParser.json());
 
 async function main() {
 
-    const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@elkamaroninino.kbimphh.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`; 
+    const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@elpokemoninino.kbimphh.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`; 
     
     console.log(uri)
     try {
@@ -22,7 +24,14 @@ async function main() {
         });
         console.log('Base de datos conectada');
         
-        // Resto del código de configuración de Express aquí
+        app.use(session({
+            secret: 'secret',
+            resave: false,
+            saveUninitialized: true
+        }));
+
+        app.use(flash());
+
         app.use(express.static(__dirname + '/public/'));
         app.use('/assets', express.static(path.join(__dirname, 'assets')));
         app.set('view engine', 'ejs');

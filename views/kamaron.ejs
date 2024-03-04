@@ -2,26 +2,39 @@
 
   <div class="container">
 
-    <h1>Nuestra carta</h1>
-    <a class="btn btn-success my-4" href="/kamaron/crear">Crear kamaron</a>
-    <table class="table">
+    <div id="successMessage" class="alert alert-success" role="alert" style="display: none;">
+      <%= successMessage %>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+
+    <div id="errorMessage" class="alert alert-danger" role="alert" style="display: none;">
+      <%= errorMessage %>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+
+    <h1 class="text-center">Nuestra carta</h1>
+    <button type="button" class="btn btn-success w-100 my-2" data-bs-toggle="modal" data-bs-target="#createModal">
+      Añadir elemento
+    </button>
+    <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col"><img src="" alt=""></th>
+          <th scope="col"></th>
           <th scope="col">Precio</th>
           <th scope="col">Nombre</th>
           <th scope="col">Descripción</th>
+          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <% if (arraykamaron.length> 0) { %>
           <% arraykamaron.forEach(kamaron=> { %>
             <tr>
-              <th scope="row">
-                <img class="logo" src="<%= kamaron.url %>" alt="">
-              </th>
               <td>
-                <%= kamaron.price %>
+                <img class="logo" src="<%= kamaron.url %>" alt="">
+              </td>
+              <td>
+                <%= kamaron.price %>€
               </td>
               <td>
                 <%= kamaron.name %>
@@ -29,32 +42,119 @@
               <td>
                 <%= kamaron.descripcion %>
               </td>
-              <td> <a class="btn btn-warning btn-sm" href="kamaron/<%= kamaron._id %>">Editar</a>
-                <button type="button" class="btn btn-danger btn-sm Nogales" onclick="nogalear(this)" data-id="<%= kamaron._id %>" data-bs-toggle="modal"
-                  data-bs-target="#deletemodal">
+
+              <td>
+                <button type="button" class="btn btn-danger btn-sm Nogales" onclick="nogalear2(this)"
+                  data-id="<%= kamaron._id %>" data-bs-toggle="modal" data-bs-target="#deletemodal">
+                  Editar
+                </button>
+                <button type="button" class="btn btn-danger btn-sm Nogales" onclick="nogalear(this)"
+                  data-id="<%= kamaron._id %>" data-bs-toggle="modal" data-bs-target="#deletemodal">
                   Eliminar
                 </button>
-
               </td>
             </tr>
             <% }) %>
               <% } %>
-
-
       </tbody>
     </table>
+
   </div>
 
-
-  <div class="modal" id="deletemodal" tabindex="-1">
+  <div class="modal fade" id="deletemodal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Eliminar michelada</h5>
+          <h5 class="modal-title">Eliminar elemento de la carta</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>¿Estás seguro de que quieres eliminar la michelada?</p>
+          <p>¿Estás seguro de que quieres eliminar el plato de la carta?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger" data-id="" id="eliminar">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="edit" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar elemento de la carta</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editar">
+            <div class="mb-3">
+              <input type="text" class="form-control" id="url" name="url" required>
+            </div>
+            <div class="mb-3">
+              <input type="text" class="form-control" id="price" name="price" required>
+            </div>
+            <div class="mb-3">
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+              <input type="text" class="form-control" id="descripcion" name="decripcion" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Crear elemento de la carta</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+
+            <h2 class="text-center">Añadir un plato a la carta</h2>
+            <form id="formularioKamaron" action="/kamaron" class="my-2" method="POST"
+              onsubmit="return validarFormulario()">
+              <div class="d-flex flex-column justify-content-center align-items-center">
+                <img id="imagenSeleccionada" src="/images/kamaron.png" alt="Imagen seleccionada"
+                  class="opciones rounded py-3">
+                <select class="form-select" name="url" id="urlSelect">
+                  <option value="/images/kamaron.png">PlaceHolder</option>
+                  <option value="/images/camarones.jpg">Camarones</option>
+                  <option value="/images/bebis.jpg">Bebidas</option>
+                  <option value="/images/cangrejo.jpg">Cangrejo</option>
+                  <option value="/images/ensalada.jpg">Ensalada</option>
+                  <option value="/images/lagarto.jpg">Lagarto</option>
+                  <option value="/images/coquinas.jpg">Coquinas</option>
+                  <option value="/images/costilla.jpg">Costilla</option>
+                  <option value="/images/langosta.webp">Langosta</option>
+                  <option value="/images/langostino.jpg">Langostino</option>
+                  <option value="/images/michelada.jpg">Michelada</option>
+                  <option value="/images/pollo.jpg">Pollo</option>
+                </select>
+                <input type="text" placeholder="Precio" class="form-control my-2" name="price" id="precio" required
+                  pattern="[0-9]+(\.[0-9]{1,2})?">
+                <input type="text" placeholder="Nombre" class="form-control my-2" name="name" id="nombre" required
+                  maxlength="40">
+                <input type="text" placeholder="Descripción" class="form-control my-2" name="descripcion"
+                  id="descripcion">
+                <button type="submit" class="btn btn-dark btn-block">
+                  Agregar
+                </button>
+                <div class="invalid-feedback">Por favor, introduce un precio válido (solo números positivos con hasta 2
+                  decimales).</div>
+                <div class="invalid-feedback">El nombre del plato debe tener como máximo 40 caracteres.</div>
+              </div>
+            </form>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancelar</button>
@@ -88,7 +188,66 @@
         }
       })
 
-      function nogalear(element){
+      function nogalear(element) {
         actualId = element.dataset.id
       }
+
+      function nogalear2(element) {
+        actualId = element.dataset.id
+      }
+
+      const select = document.getElementById('urlSelect');
+      const imagen = document.getElementById('imagenSeleccionada');
+
+      select.addEventListener('change', function () {
+        const selectedOption = select.options[select.selectedIndex];
+
+        imagen.src = selectedOption.value;
+      });
+
+      function showMessage(messageType, message) {
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        if (messageType === 'success') {
+          successMessage.textContent = message;
+          successMessage.style.display = 'block';
+        } else if (messageType === 'error') {
+          errorMessage.textContent = message;
+          errorMessage.style.display = 'block';
+        }
+      }
+
+      function hideMessage(messageType) {
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        if (messageType === 'success') {
+          successMessage.style.display = 'none';
+        } else if (messageType === 'error') {
+          errorMessage.style.display = 'none';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const successMessage = '<%= successMessage %>';
+        const errorMessage = '<%= errorMessage %>';
+
+        if (successMessage) {
+          showMessage('success', successMessage);
+        }
+
+        if (errorMessage) {
+          showMessage('error', errorMessage);
+        }
+      });
+
+      const closeButtonList = document.querySelectorAll('.btn-close');
+      closeButtonList.forEach(button => {
+        button.addEventListener('click', () => {
+          const messageType = button.parentElement.id === 'successMessage' ? 'success' : 'error';
+          hideMessage(messageType);
+        });
+      });
+
     </script>

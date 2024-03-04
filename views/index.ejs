@@ -1,5 +1,14 @@
-<%- include("template/header", {tituloWeb: 'Index'}) %>
+<%- include("template/header", { tituloWeb: 'Home' }) %>
 
-<h2><%= contenido %></h2>
+    <h1 class="text-center mt-5">Bienvenidos a Don Kamarón</h1>
 
-<%- include("template/footer.ejs") %>
+    <section class="d-flex justify-content-center align-items-center">
+        <div class="">
+            <video class="" controls>
+                <source src="/video/kamaron.mp4" type="video/mp4">
+                Tu navegador no soporta el tag de video.
+            </video>
+        </div>
+    </section>
+
+    <%- include("template/footer.ejs") %>
