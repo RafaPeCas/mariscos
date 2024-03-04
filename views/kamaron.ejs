@@ -44,8 +44,8 @@
               </td>
 
               <td>
-                <button type="button" class="btn btn-danger btn-sm Nogales" onclick="nogalear2(this)"
-                  data-id="<%= kamaron._id %>" data-bs-toggle="modal" data-bs-target="#deletemodal">
+                <button type="button" class="btn btn-warning btn-sm Nogales" onclick="nogalear(this)"
+                  data-id="<%= kamaron._id %>" data-bs-toggle="modal" data-bs-target="#edit">
                   Editar
                 </button>
                 <button type="button" class="btn btn-danger btn-sm Nogales" onclick="nogalear(this)"
@@ -88,17 +88,37 @@
         </div>
         <div class="modal-body">
           <form id="editar">
+            <img id="editImagenSeleccionada" src="/images/kamaron.png" alt="Imagen seleccionada"
+              class="opciones rounded py-3">
             <div class="mb-3">
-              <input type="text" class="form-control" id="url" name="url" required>
+              <label for="url">Selecciona la nueva imágen</label>
+              <select class="form-select" name="url" id="editUrlSelect">
+                <option value="/images/kamaron.png">PlaceHolder</option>
+                <option value="/images/camarones.jpg">Camarones</option>
+                <option value="/images/bebis.jpg">Bebidas</option>
+                <option value="/images/cangrejo.jpg">Cangrejo</option>
+                <option value="/images/ensalada.jpg">Ensalada</option>
+                <option value="/images/lagarto.jpg">Lagarto</option>
+                <option value="/images/coquinas.jpg">Coquinas</option>
+                <option value="/images/costilla.jpg">Costilla</option>
+                <option value="/images/langosta.webp">Langosta</option>
+                <option value="/images/langostino.jpg">Langostino</option>
+                <option value="/images/michelada.jpg">Michelada</option>
+                <option value="/images/pollo.jpg">Pollo</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="price">Selecciona el nuevo precio</label>
+              <input type="text" class="form-control" id="editprice" name="price" required>
             </div>
             <div class="mb-3">
-              <input type="text" class="form-control" id="price" name="price" required>
+              <label for="name">Selecciona el nuevo nombre</label>
+              <input type="text" class="form-control" id="editname" name="name" required>
             </div>
             <div class="mb-3">
-              <input type="text" class="form-control" id="name" name="name" required>
-            </div>
-            <div class="mb-3">
-              <input type="text" class="form-control" id="descripcion" name="decripcion" required>
+              <label for="descripcion">Selecciona la nueva descripcion</label>
+              <input type="text" class="form-control" id="editdescripcion" name="descripcion" required>
             </div>
             <button type="submit" class="btn btn-primary">Actualizar</button>
           </form>
@@ -192,14 +212,23 @@
         actualId = element.dataset.id
       }
 
-      function nogalear2(element) {
-        actualId = element.dataset.id
-      }
+      const select = document.getElementById('UrlSelect');
+      const imagen = document.getElementById('ImagenSeleccionada');
 
-      const select = document.getElementById('urlSelect');
-      const imagen = document.getElementById('imagenSeleccionada');
+      
+
+      const eselect = document.getElementById('editUrlSelect');
+      const eimagen = document.getElementById('editImagenSeleccionada');
+
+      eselect.addEventListener('change', function () {
+        console.log(eimagen)
+        const eselectedOption = eselect.options[eselect.selectedIndex];
+
+        eimagen.src = eselectedOption.value;
+      });
 
       select.addEventListener('change', function () {
+        console.log(imagen)
         const selectedOption = select.options[select.selectedIndex];
 
         imagen.src = selectedOption.value;
@@ -250,4 +279,26 @@
         });
       });
 
+      const formEditar = document.querySelector("#editar");
+      formEditar.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const url = formEditar.elements["url"].value
+        const price = formEditar.elements["price"].value
+        const name = formEditar.elements["name"].value
+        const descripcion = formEditar.elements["descripcion"].value
+        const _id = actualId;
+        const data = await fetch(`/kamaron/${actualId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ url, price, name, descripcion })
+        })
+        const res = await data.json()
+        if (res.estado) {
+          window.location.href = "/kamaron"
+        } else {
+          console.log(res)
+        }
+      })
     </script>
