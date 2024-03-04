@@ -1,0 +1,94 @@
+<%- include("template/header", {titulo: 'Panel de Admin' }) %>
+
+  <div class="container">
+
+    <h1>Nuestra carta</h1>
+    <a class="btn btn-success my-4" href="/kamaron/crear">Crear kamaron</a>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"><img src="" alt=""></th>
+          <th scope="col">Precio</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (arraykamaron.length> 0) { %>
+          <% arraykamaron.forEach(kamaron=> { %>
+            <tr>
+              <th scope="row">
+                <img class="logo" src="<%= kamaron.url %>" alt="">
+              </th>
+              <td>
+                <%= kamaron.price %>
+              </td>
+              <td>
+                <%= kamaron.name %>
+              </td>
+              <td>
+                <%= kamaron.descripcion %>
+              </td>
+              <td> <a class="btn btn-warning btn-sm" href="kamaron/<%= kamaron._id %>">Editar</a>
+                <button type="button" class="btn btn-danger btn-sm Nogales" onclick="nogalear(this)" data-id="<%= kamaron._id %>" data-bs-toggle="modal"
+                  data-bs-target="#deletemodal">
+                  Eliminar
+                </button>
+
+              </td>
+            </tr>
+            <% }) %>
+              <% } %>
+
+
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="modal" id="deletemodal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminar michelada</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro de que quieres eliminar la michelada?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger btn-sm" data-id="" id="eliminar">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <%- include("template/footer.ejs") %>
+
+    <script>
+      const btnEliminar = document.getElementById("eliminar")
+      let actualId
+      btnEliminar.addEventListener("click", async () => {
+        console.log(btnEliminar.dataset.id)
+        try {
+          const data = await fetch(`/kamaron/${actualId}`, {
+            method: "delete"
+          })
+          const res = await data.json()
+          console.log(res)
+          if (res.estado) {
+            window.location.href = "/kamaron"
+          } else {
+            console.log(res)
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      })
+
+      function nogalear(element){
+        actualId = element.dataset.id
+      }
+    </script>
